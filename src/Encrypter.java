@@ -96,6 +96,7 @@ public class Encrypter {
         try (Scanner fileScanner = new Scanner(Paths.get(filePath))){
             while(fileScanner.hasNextLine()){
                 String file = fileScanner.nextLine();
+                message = message + file + "\n";
             } fileScanner.close();
         } catch (Exception e){
             System.out.println("ERROR: " + e.toString());
