@@ -1,8 +1,9 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
-
+import java.nio.file.*;
 public class Encrypter {
 
     private int shift;
@@ -33,6 +34,23 @@ public class Encrypter {
      * @throws Exception if an error occurs while reading or writing the files
      */
     public void encrypt(String inputFilePath, String encryptedFilePath) throws Exception {
+         try{
+            String message = readFile(inputFilePath);
+            message = message.toLowerCase();
+         for (int i = 0; i < message.length(); i++)
+         {
+            char P = message.charAt(i);
+            if(Character.isLetter(P)){
+                P = (char)((P - 'a' + shift + 26) % 26 + 'a');
+            }
+                String str = "" + P;
+                String text = str;
+                
+        writeFile(text, encryptedFilePath);
+        }}
+        catch (Exception e) {
+            System.out.println("ERROR: " + e.toString());
+        }
         //TODO: Call the read method, encrypt the file contents, and then write to new file
     }
 
@@ -44,8 +62,27 @@ public class Encrypter {
      * @throws Exception if an error occurs while reading or writing the files
      */
     public void decrypt(String messageFilePath, String decryptedFilePath) throws Exception {
-        //TODO: Call the read method, decrypt the file contents, and then write to new file
-    }
+        try{
+            String message = readFile(messageFilePath);
+        message = message.toLowerCase();
+         for (int i = 0; i < message.length(); i++)
+         {
+            char P = message.charAt(i);
+            if(Character.isLetter(P)){
+                P = (char)((P - 'a' - shift + 26) % 26 + 'a');
+            }
+            String str = "" + P;
+            String text = str;
+
+        writeFile(text, decryptedFilePath);
+        }}
+        catch (Exception e) {
+            System.out.println("ERROR: " + e.toString());
+        }
+         
+
+    
+}
 
     /**
      * Reads the content of a file and returns it as a string.
@@ -56,7 +93,13 @@ public class Encrypter {
      */
     private static String readFile(String filePath) throws Exception {
         String message = "";
-        //TODO: Read file from filePath
+        try (Scanner fileScanner = new Scanner(Paths.get(filePath))){
+            while(fileScanner.hasNextLine()){
+                String file = fileScanner.nextLine();
+            } fileScanner.close();
+        } catch (Exception e){
+            System.out.println("ERROR: " + e.toString());
+        }
         return message;
     }
 
@@ -67,8 +110,14 @@ public class Encrypter {
      * @param filePath the path to the file where the data will be written
      */
     private static void writeFile(String data, String filePath) {
-        //TODO: Write to filePath
-    }
+        try (PrintWriter output = new PrintWriter(filePath)){
+            output.println(data);
+            output.close();
+        } catch (Exception e){
+            System.out.println("ERROR: " + e.toString());
+        }
+        }
+    
 
     /**
      * Returns a string representation of the encrypted text.
